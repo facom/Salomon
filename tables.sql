@@ -47,7 +47,7 @@ create table actividades (
     dependencia_id smallint,
     programa_id smallint,
     horario_ids varchar(255)
-)
+);
 
 create table espacios (
 
