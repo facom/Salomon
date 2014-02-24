@@ -1,0 +1,117 @@
+Espacios:
+========
+- EspacioID
+- Ubicacion
+- Recursos
+* ProyFijo
+* ProyMovil
+* TV
+* Pantalla
+* Computador
+* Portatil
+* Extension
+* Red
+* TableroAcril
+* TableroTiza
+* Mesa
+* Atril
+* Audio
+* Camara
+* SillasMoviles
+* Opacas
+* Cortinas
+* WiFi
+* Windows
+* Linux
+- HorariosID
+
+Actividades:
+===========
+- ActividadID
+- HorariosID
+- ProgramaID
+- Codigo
+- Requerimientos
+* ProyFijo
+* ProyMovil
+* TV
+* Pantalla
+* Computador
+* Portatil
+* Extension
+* Red
+* TableroAcril
+* TableroTiza
+* Mesa
+* Atril
+* Audio
+* Camara
+* SillasMoviles
+* Opacas
+* Cortinas
+* WiFi
+* Windows 
+* Linux
+- HorariosID
+
+Horarios:
+========
+- HorarioID
+- ActividadID
+- EspacioID
+- Dia
+- Hora
+- Duracion
+- EficienciaEspacio
+
+Programas:
+=========
+- ProgramaID
+- Programa
+
+Algoritmo:
+=========
+
+Para cada actividad.  Recorra todos los espacios y los califica así:
+
+sigma=+10
+
+- (Capacidad-Sillas)/sigma 
+- Programa: +1
+- Mismo espacio: 0
+- Cambio espacio: -1 
+- No cumplir un requisito: -1
+- SobreOcupacion: -1
+- Total de calificacion por curso:
+
+* Total de calificacion por todos los cursos:
+
+* Se empieza de nuevo haciendo un reshuffle sobre todos los cursos.
+
+* Se busca la asignación más optima.
+
+Matching
+========
+
+Algoritmo:
+
+o Abre archivo con soluciones
+% Loop sobre solucion
+% Crea directorio de la solucion
+- Abre archivo para los horarios
+- Loop sobre la actividad (*):
+* Loop sobre los horarios (+):
++ Loop sobre los espacios (x):
+x Si programa actividad = programa espacio: +2 
+x Sino : -1
+x Si programa actividad = espacio facultad: +1
+x Requerimientos vs. Recursos: +1 si cumple, -1 no cumple, 0 neutral
+x Guarda puntaje del espacio, eficiencia espacio en archivo horarios
++ Si es primer horario: siga
++ Sino: si el espacio de máximo puntaje actual = espacio máximo
+        puntaje previo: +5
++ Calcule eficiencia para el espacio de máximo puntaje y acumule puntaje solucion
++ Fin horarios
+* Fin actividad
+- Guarda valor total de la solucion
+% Fin solucion
