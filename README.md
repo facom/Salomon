@@ -1,14 +1,14 @@
-SpAsig
-======
+Salomon
+=======
 
 Asignacion de Espacios
 
 Quick start
 -----------
 
-Get a copy of from https://github.com/facom/AstrodynTools:
+Get a copy of from https://github.com/facom/Salomon:
 
-        $ git clone http://github.com/facom/AstrodynTools.git
+        $ git clone http://github.com/facom/Salomon.git
 
 
 For contributors
@@ -20,7 +20,7 @@ develop contributions:
 	$ ssh-keygen -t rsa -C "user@email"
 
 Upload public key to the github project site
-(https://github.com/facom/AstrodynTools). You will need access to the
+(https://github.com/facom/Salomon). You will need access to the
 account where the repository was created.
 
 Configure git:
@@ -30,4 +30,5 @@ Configure git:
 
 Get an authorized clone of the master trunk:
 
-        $ git clone git@github.com:facom/AstrodynTools.git
+        $ git clone git@github.com:facom/Salomon.git
+
