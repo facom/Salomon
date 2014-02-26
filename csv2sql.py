@@ -13,7 +13,7 @@ fl=open(dir+file,"rU")
 data=reader(fl,delimiter=";")
 
 i=0
-print "use salomon;"
+print "use salomon_1401;"
 for row in data:
     if i==0:
         fields=",".join(row)
