@@ -47,13 +47,13 @@ for programa in salomon['Programas']['rows'].keys():
 #############################################################
 #PICKLE PRESENT STATUS OF DATABASE
 #############################################################
+system("rm -rf soluciones/*")
 pickleSalomon("soluciones/salomon-%05d.sal"%(0),salomon)
 
 #############################################################
 #GET BLOCKS PER PROGRAM
 #############################################################
 Nsol=1
-system("rm -rf soluciones/*")
 Salomones=[]
 SolutionScores=[]
 GlobalEfficiencies=[]
