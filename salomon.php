@@ -5,13 +5,32 @@
 $db=mysqli_connect("localhost","salomon","123","salomon_1401");
 
 //////////////////////////////////////////////////////////////
+//MAP TABLES<->PRIMARY 
+//////////////////////////////////////////////////////////////
+$sql="show tables;";
+$out=mysqli_query($db,$sql);
+$primaries=array();
+while($row=mysqli_fetch_array($out)){
+    $tabla=$row[0];
+    $out2=mysqli_query($db,"show columns in $tabla;");
+    while($fila=mysqli_fetch_array($out2)){
+      if($fila[3]=="PRI"){
+	$primary=$fila[0];
+	break;
+      }
+    }
+    $primaries[$primary]=$tabla;
+}
+
+//////////////////////////////////////////////////////////////
 //TITULO
 //////////////////////////////////////////////////////////////
 echo "<h1>SALOMON</h1>";
 echo "<h1>Facultad de Ciencias Exactas y Naturales</h1>";
 echo "<p><a href=?>Lista de Tablas</a></p>";
 
-if($_GET["accion"]=="Navega"){
+if(false){
+}else if($_GET["accion"]=="Navega"){
   //////////////////////////////////////////////////////////////
   //NAVEGA TABLA
   //////////////////////////////////////////////////////////////
@@ -60,7 +79,27 @@ FILTRO;
     echo "<pre><td><a href='?accion=Edita&tabla=$tabla&campo=$fields[0]&id=$id'>$i</a></td></pre>";
     foreach($fields as $field){
       $value=$row[$field];
-      echo "<td>$value</td>";
+      if(preg_match("/_id$/",$field)){
+	$parts=split("_",$field);
+	$id=$parts[0];
+	$tabla=$primaries[$id];
+	$url="?accion=Navega&tabla=$tabla&condicion=$id%3D%27${value}%27";
+	echo "<td><a href='$url'>$value</a></td>";
+      }else if(preg_match("/_ids$/",$field)){
+	$parts=split("_",$field);
+	$id=$parts[0];
+	$tabla=$primaries[$id];
+	$values=split(";",$value);
+	$valuestr="";
+	foreach($values as $val){
+	  if(!preg_match("/[\w\d]+/",$val)){continue;}
+	  $url="?accion=Navega&tabla=$tabla&condicion=$id%3D%27${val}%27";
+	  $valuestr.="<a href='$url'>$val</a>;";
+	}
+	echo "<td>$valuestr</td>";
+      }else{
+	echo "<td>$value</td>";
+      }
     }
     echo "</tr>";
   }

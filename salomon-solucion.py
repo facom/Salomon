@@ -53,12 +53,9 @@ pickleSalomon("soluciones/salomon-%05d.sal"%(0),salomon)
 #############################################################
 #GET BLOCKS PER PROGRAM
 #############################################################
-Nsol=1
-Salomones=[]
-SolutionScores=[]
-GlobalEfficiencies=[]
-AverageEfficiencies=[]
+Nsol=10
 
+fsol=open("soluciones/salomon.txt","w")
 for solution in xrange(1,Nsol+1):
     d="\t"
     if verbose1:print d,"Solution: %d"%solution
@@ -340,14 +337,11 @@ for solution in xrange(1,Nsol+1):
     averageefficiency=(average_efficiency)/horario_count
     if verbose1:print d,"Average Efficiency: %.1f"%(averageefficiency)
 
-    SolutionScores+=[scoresolution]
-    GlobalEfficiencies+=[globalefficiency]
-    AverageEfficiencies+=[averageefficiency]
-    Salomones+=[salomon_test]
-
+    fsol.write("%05d %.3f %.2f %.2f\n"%(solution,scoresolution,globalefficiency,averageefficiency))
+    
     pickleSalomon("soluciones/salomon-%05d.sal"%solution,salomon_test)
-        
+    del(salomon_test)
     #END-ACTIVIDADES
 
 #END-SOLUTIONS
-print SolutionScores
+fsol.close()

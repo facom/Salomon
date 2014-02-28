@@ -11,6 +11,12 @@ def pickleSalomon(fpickle,salomon):
         pickle.dump(salomon,fdump)
     fdump.close()
 
+def unpickleSalomon(fpickle):
+    with open(fpickle,"rb") as fdump:
+        salomon=pickle.load(fdump)
+    fdump.close()
+    return salomon
+
 def splitString(string,separator):
     return string.split(separator)[:-1]
 
