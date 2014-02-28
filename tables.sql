@@ -10,7 +10,7 @@ create table Dependencias (
     bloques varchar(255),
 
     #ENLACES
-    programa_ids varchar(255)
+    programa_ids varchar(255) not null default ''
 );
 
 create table Programas (
@@ -18,10 +18,10 @@ create table Programas (
     programa varchar(3) not null,
     primary key (programa),
 
-    nombre varchar(255),
+    nombre varchar(255) not null default '',
 
     #ENLACES
-    dependencia_id varchar(2)
+    dependencia_id varchar(2) not null default ''
 );
 
 create table Espacios (
@@ -29,13 +29,13 @@ create table Espacios (
     espacio varchar(5),
     primary key (espacio),
     
-    bloque varchar(2),
-    numero varchar(3),
+    bloque varchar(2) not null default '',
+    numero varchar(3) not null default '',
 
     #ENLACES
-    dependencia_id varchar(2),
-    recurso_id varchar(50),
-    horario_ids varchar(1000)
+    dependencia_id varchar(2) not null default '',
+    recurso_id varchar(50) not null default '',
+    horario_ids varchar(1000) not null default ''
 );
 
 create table Recursos (
@@ -44,9 +44,9 @@ create table Recursos (
     recurso varchar(50),
     primary key (recurso),
     
-    capacidad varchar(3),
+    capacidad varchar(3) not null default '',
     salacomputo varchar(1) not null default 0,
-    labquim varchar(1) not null default 0,
+    aulalab varchar(1) not null default 0,
     proyfijo varchar(1) not null default 0,
     proymovil varchar(1) not null default 0,
     tv varchar(1) not null default 0,
@@ -78,14 +78,15 @@ create table Horarios (
     horario varchar(20),
     primary key (horario),
     
-    dia varchar(2),
-    hora varchar(2),
-    duracion varchar(2),
-    eficiencia varchar(20),
+    dia varchar(2) not null default '',
+    hora varchar(2) not null default '',
+    duracion varchar(2) not null default '',
+    eficiencia varchar(20) not null default '',
 
     #ENLACES
-    codigo_id varchar(20),
-    espacio_id varchar(20)
+    codigo_id varchar(20) not null default '',
+    espacio_id varchar(20) not null default '',
+    recurso_id varchar(50) not null default ''
 );
 
 create table Actividades (
@@ -93,12 +94,11 @@ create table Actividades (
     codigo varchar(20),
     primary key (codigo),
 
-    nombre varchar(255),
-    grupo varchar(2),
-    matriculados varchar(3),
+    nombre varchar(255) not null default '',
+    grupo varchar(2) not null default '',
+    matriculados varchar(3) not null default '',
 
     #ENLACES
-    recurso_id varchar(50),
-    programa_id varchar(3),
-    horario_ids varchar(1000)
+    programa_ids varchar(255) not null default '',
+    horario_ids varchar(1000) not null default ''
 );

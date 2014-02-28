@@ -55,6 +55,7 @@ with con:
     i=0
     jr=1000
     for row in data:
+        if row[0]=='INFORME':break
         if i==0:
             fields=""
             fields_rec=""
@@ -135,8 +136,8 @@ with con:
                         if field!='horario_id' and field!="espacio_id" and field!="recurso_id":
                             fields+="%s,"%field
                     j+=1
-                campos="(recurso_id,%s)"%(fields.strip(","))
-                campos_hor="(horario,codigo_id,%s)"%(fields_hor.strip(","))
+                campos="(%s)"%(fields.strip(","))
+                campos_hor="(horario,codigo_id,recurso_id,%s)"%(fields_hor.strip(","))
                 campos_rec="(recurso,%s)"%(fields_rec.strip(","))
             else:
                 values=""
@@ -169,8 +170,8 @@ with con:
                         recursoid=value
                     j+=1
 
-                values="'A%s'"%codigo+","+values.strip(",")
-                values_hor="'%s','%s',"%(horarioid,codigo)+values_hor.strip(",")
+                values=values.strip(",")
+                values_hor="'%s','%s','%s',"%(horarioid,codigo,horarioid)+values_hor.strip(",")
                 values_rec="'%s',"%recursoid+values_rec.strip(",")
 
                 if qinsert:
