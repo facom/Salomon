@@ -27,7 +27,8 @@ while($row=mysqli_fetch_array($out)){
 //////////////////////////////////////////////////////////////
 echo "<h1>SALOMON</h1>";
 echo "<h1>Facultad de Ciencias Exactas y Naturales</h1>";
-echo "<p><a href=?>Lista de Tablas</a></p>";
+echo "<h2><a href=?>Lista de Tablas</a></h2>";
+echo "<h3>Ver tambien: <a href=salomon-reportes.php>Reportes</a></h2>";
 
 if(false){
 }else if($_GET["accion"]=="Navega"){

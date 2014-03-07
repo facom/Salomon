@@ -7,6 +7,7 @@ verbose1=1
 verbose2=0
 verbose3=0
 verbose4=0
+continuar=False
 
 #AVAILABILITY
 
@@ -53,9 +54,12 @@ pickleSalomon("soluciones/salomon-%05d.sal"%(0),salomon)
 #############################################################
 #GET BLOCKS PER PROGRAM
 #############################################################
-Nsol=10
+try:
+    Nsol=int(argv[1])
+except:
+    Nsol=10
 
-fsol=open("soluciones/salomon.txt","w")
+fsol=open("soluciones/salomon-soluciones.txt","w")
 for solution in xrange(1,Nsol+1):
     d="\t"
     if verbose1:print d,"Solution: %d"%solution
@@ -295,6 +299,16 @@ for solution in xrange(1,Nsol+1):
                 capsol+=[int(capacidad)]
                 if verbose4:print d,"TOTAL SCORE:",score
 
+                if verbose4:
+                    if not continuar:
+                        continuar=raw_input()
+                        try:
+                            continuar=int(continuar)
+                        except:
+                            pass
+                    else:
+                        verbose4=0
+
                 #raw_input()
 
             #****************************************
@@ -326,6 +340,18 @@ for solution in xrange(1,Nsol+1):
             horario['eficiencia']=efficiency
             average_efficiency+=efficiency
             
+            if continuar:
+                continuar=raw_input()
+                try:
+                    continuar=int(continuar)
+                except:
+                    continuar=1
+
+                if continuar==0:
+                    verbose4=True
+                elif continuar==2:
+                    continuar=False
+
 
         #END-COURSE
 
@@ -337,6 +363,17 @@ for solution in xrange(1,Nsol+1):
     averageefficiency=(average_efficiency)/horario_count
     if verbose1:print d,"Average Efficiency: %.1f"%(averageefficiency)
 
+    """
+    if not continuar and continuar!=3:
+        continuar=raw_input()
+        try:
+            continuar=int(continuar)
+        except:
+            continuar=False
+    else:
+        verbose4=False
+    #"""
+        
     fsol.write("%05d %.3f %.2f %.2f\n"%(solution,scoresolution,globalefficiency,averageefficiency))
     
     pickleSalomon("soluciones/salomon-%05d.sal"%solution,salomon_test)
