@@ -1,11 +1,10 @@
-import MySQLdb as mdb
+from salomon import *
 from csv import *
-from sys import argv,exit
 
-tabledir="tmp/EspaciosFacultad/BaseDatos/"
-basename="Salomon"
+tabledir=CSVLOCATION
+basename=BASENAME
 
-con=mdb.connect("localhost","salomon","123","salomon_1401")
+con=mdb.connect("localhost",USER,PASSWORD,DATABASE)
 db=con.cursor()
 
 verbose=False

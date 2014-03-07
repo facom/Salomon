@@ -1,8 +1,11 @@
 <?
+$SCRIPTNAME=$_SERVER[SCRIPT_FILENAME];
+$ROOTDIR=rtrim(shell_exec("dirname $SCRIPTNAME"));
+require("$ROOTDIR/salomon-configuration.php");
 //////////////////////////////////////////////////////////////
 //CONECTA CON BASE DE DATOS
 //////////////////////////////////////////////////////////////
-$db=mysqli_connect("localhost","salomon","123","salomon_1401");
+$db=mysqli_connect("localhost",$USER,$PASSWORD,$DATABASE);
 
 //////////////////////////////////////////////////////////////
 //MAP TABLES<->PRIMARY 

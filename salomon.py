@@ -6,6 +6,15 @@ import copy
 import pickle
 from os import system
 
+###################################################
+#CONFIGURACION
+###################################################
+CSVLOCATION="tmp/EspaciosFacultad/BaseDatos/"
+BASENAME="Salomon"
+DATABASE="salomon_1401"
+USER="salomon"
+PASSWORD="123"
+
 def pickleSalomon(fpickle,salomon):
     with open(fpickle,"wb") as fdump:
         pickle.dump(salomon,fdump)
