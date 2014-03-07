@@ -64,9 +64,9 @@ How to use it
 
 5) Configure user, password and database at "salomon-configuration.php":
 
-	DATABASE="salomon_1401"
-	USER="salomon"
-	PASSWORD="123"   
+	$DATABASE="salomon_1401";
+	$USER="salomon";
+	$PASSWORD="123";  
 
 5) Populate tables from csv source data:
 
