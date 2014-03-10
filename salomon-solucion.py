@@ -1,4 +1,4 @@
-from util import *
+from salomon import *
 
 #############################################################
 #PARAMETERS
@@ -7,6 +7,7 @@ verbose1=1
 verbose2=0
 verbose3=0
 verbose4=0
+verbose5=0
 continuar=False
 
 #AVAILABILITY
@@ -32,17 +33,22 @@ salomon,connection=loadDatabase(server='localhost',
                      user='salomon',
                      password='123',
                      database='salomon_1401')
-
+print "Hola";
+exit(0)
 #############################################################
 #GET BLOCKS PER PROGRAM
 #############################################################
 Bloques=dict()
 for programa in salomon['Programas']['rows'].keys():
+    if verbose5:print "Programa:",programa
     Bloques[programa]=[]
     for dependencia in salomon['Dependencias']['rows'].keys():
+        if verbose5:print "\tPrueba dependencia:",dependencia
         progs=salomon['Dependencias']['rows'][dependencia]['programa_ids']
         blocks=salomon['Dependencias']['rows'][dependencia]['bloques']
+        if verbose5:print "\tProgramas:",progs
         if programa in progs:
+            if verbose5:print "\tPrograma %s en dependencia %s"%(programa,dependencia) 
             Bloques[programa]+=blocks.split(";")[:-1]
 
 #############################################################
@@ -59,6 +65,7 @@ try:
 except:
     Nsol=10
 
+random.seed(1)
 fsol=open("soluciones/salomon-soluciones.txt","w")
 for solution in xrange(1,Nsol+1):
     d="\t"
@@ -123,6 +130,8 @@ for solution in xrange(1,Nsol+1):
             duracion=int(horario['duracion'])
             horaend=hora+duracion
             recursoid=horario['recurso_id']
+            coincidenciaid="A"+horario['recurso_id']
+            
             if verbose4:print d,"Dia: ",dia
             if verbose4:print d,"Hora: ",hora
             if verbose4:print d,"Duracion: ",duracion
@@ -131,6 +140,8 @@ for solution in xrange(1,Nsol+1):
             #GET REQUIRED RESOURCES
             #****************************************
             requirements=salomon_test['Recursos']['rows'][recursoid]
+            coincidencia=salomon_test['Recursos']['rows'][coincidenciaid]
+
             cupo=requirements['capacidad']
             if verbose4:print d,"Cupo: ",cupo
 
@@ -229,9 +240,9 @@ for solution in xrange(1,Nsol+1):
                 if nmis>0:
                     score3=-conf.weight_coincidence*1./nmis
                 else:score3=0
-                if verbose4:print d,"Score vecindad:",score3
+                if verbose4:print d,"Score coincidencia:",score3
                 d="\t"*6
-                if verbose4:print d,"Numero de mismatchs:",nmis
+                if verbose4:print d,"Numero de divergencias:",nmis
                 
                 score+=score3
 
@@ -243,12 +254,12 @@ for solution in xrange(1,Nsol+1):
                 reskeys=resources.keys()
                 nmatch=0
                 nmiss=0
-                d="\t"*6
                 ncoin=0
                 nmiss=0
                 ntot=0
                 required=True
                 for reskey in reskeys:
+                    d="\t"*6
                     if reskey=='capacidad' or reskey=='recurso':continue
                     req=requirements[reskey]
                     res=resources[reskey]
@@ -265,12 +276,16 @@ for solution in xrange(1,Nsol+1):
 
                     if req=='0':continue                    
                     if verbose4:print d,"Resource %s: Required: %s, Resource: %s"%(reskey,req,res)
-                    if res!='0':
+                    if res=='1':
                         if verbose4:print d,"Match"
                         ncoin+=1
                     else:
                         if verbose4:print d,"Missmatch"
                         nmiss+=1
+                        if reskey=='aulalab' or reskey=='salacomputo':
+                            nmiss+=10
+                            d="\t"*7
+                            if verbose4:print d,"This is not a special room and it is required. Mismatch:",nmiss
                     ntot+=1
 
                 if not required:continue
@@ -338,8 +353,38 @@ for solution in xrange(1,Nsol+1):
             seats_available+=capbest
             efficiency=min(100.,(100.*cupbest)/capbest)
             horario['eficiencia']=efficiency
+            horario['puntaje']=scorebest
             average_efficiency+=efficiency
-            
+
+            #****************************************
+            #COMPUTE COINCIDENCES
+            #****************************************
+            espacio=salomon_test['Espacios']['rows'][roombest]
+            recursoid=espacio['recurso_id']
+            resources=salomon_test['Recursos']['rows'][recursoid]
+            reskeys=resources.keys()
+            for reskey in reskeys:
+                res=resources[reskey]
+                req=requirements[reskey]
+                if reskey=='recurso':continue
+                elif reskey=='capacidad':
+                    coincidencia[reskey]=int(res)-int(req)
+                else:
+                    try:req_int=int(req)
+                    except:req_int=0
+                    if req_int:
+                        if req==res:coincidencia[reskey]='Si'
+                        else:coincidencia[reskey]='No'
+                    else:
+                        if res==req:coincidencia[reskey]='Vacio'
+                        else:coincidencia[reskey]='Sobrante'
+            """
+            print "Requerido:\n",requirements
+            print "Recursos:\n",resources
+            print "Coincidencia:\n",coincidencia
+            exit(0)
+            """
+
             if continuar:
                 continuar=raw_input()
                 try:

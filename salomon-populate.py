@@ -16,7 +16,7 @@ with con:
     #RESET
     ##################################################
     for table in ["Dependencias","Programas","Espacios",
-                  "Recursos","Actividades","Horarios"]:
+                  "Recursos","Actividades","Horarios","Coincidencias"]:
         print "Truncando tabla %s..."%table
         sql="truncate table %s;"%table
         if verbose:print sql
@@ -55,6 +55,7 @@ with con:
     jr=1000
     for row in data:
         if row[0]=='INFORME':break
+        if row[0]=='Actualizacion':continue
         if i==0:
             fields=""
             fields_rec=""
@@ -109,6 +110,7 @@ with con:
         
         n=0
         for row in data:
+            if row[0]=='Actualizacion':continue
             if i==0:
                 fields=""
                 fields_hor=""
@@ -136,8 +138,9 @@ with con:
                             fields+="%s,"%field
                     j+=1
                 campos="(%s)"%(fields.strip(","))
-                campos_hor="(horario,codigo_id,recurso_id,%s)"%(fields_hor.strip(","))
+                campos_hor="(horario,codigo_id,recurso_id,coincidencia_id,%s)"%(fields_hor.strip(","))
                 campos_rec="(recurso,%s)"%(fields_rec.strip(","))
+                campos_aju="(coincidencia,recurso_id)"
             else:
                 values=""
                 values_hor=""
@@ -170,7 +173,8 @@ with con:
                     j+=1
 
                 values=values.strip(",")
-                values_hor="'%s','%s','%s',"%(horarioid,codigo,horarioid)+values_hor.strip(",")
+                values_hor="'%s','%s','%s','%s',"%(horarioid,codigo,horarioid,"A"+horarioid)+values_hor.strip(",")
+                values_aju="'%s','%s'"%("A"+horarioid,"A"+horarioid)
                 values_rec="'%s',"%recursoid+values_rec.strip(",")
 
                 if qinsert:
@@ -184,6 +188,12 @@ with con:
                 sql="insert into Recursos %s values (%s);"%(campos_rec,values_rec)
                 if verbose:print sql
                 db.execute(sql)
+                sql="insert into Coincidencias %s values (%s);"%(campos_aju,values_aju)
+                if verbose:print sql
+                db.execute(sql)
+                sql="insert into Recursos (recurso) values ('%s');"%("A"+horarioid)
+                if verbose:print sql
+                db.execute(sql)
             i+=1
             #if i>5:break
 
@@ -191,3 +201,5 @@ with con:
             sql="update Actividades set horario_ids='%s' where codigo='%s';"%(cursos[curso],curso)
             if verbose:print sql
             db.execute(sql)
+
+system("rm -rf soluciones/*");

@@ -1,4 +1,4 @@
-from util import *
+from salomon import *
 
 salomon_file=argv[1]
 

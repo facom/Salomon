@@ -31,7 +31,7 @@ while($row=mysqli_fetch_array($out)){
 echo "<h1>SALOMON</h1>";
 echo "<h1>Facultad de Ciencias Exactas y Naturales</h1>";
 echo "<h2><a href=?>Lista de Tablas</a></h2>";
-echo "<h3>Ver tambien: <a href=salomon-reportes.php>Reportes</a></h2>";
+echo "<h3>Ver tambien: <a href=salomon-reportes.php>Reportes</a>, <a href=salomon-acciones.php>Acciones</a></h2>";
 
 if(false){
 }else if($_GET["accion"]=="Navega"){
@@ -56,6 +56,9 @@ echo<<<FILTRO
 <input type="hidden" name="accion" value="Navega">
 Filtro: <input type='text' name='condicion' value='$condicion'>
 <input type="submit" name="accion" value="Navega">
+<pre>
+Ej. where puntaje>-100 order by cast(puntaje as signed int)
+</pre>
 </form>
 <p></p>
 <pre style="background:lightgray;padding:10px">$sql</pre>
