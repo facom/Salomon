@@ -284,6 +284,30 @@ OUT;
   }
   echo "</ul>";
 
+  $notification="";
+  if($_POST["accion"]=="Cargar"){
+    if($_FILES["file"]["error"] > 0){
+      echo "Error: " . $_FILES["file"]["error"] . "<br>";
+    }else{
+      $name=$_FILES["datafile"]["name"];
+      $file=$_FILES["datafile"]["tmp_name"];
+      shell_exec("cp -rf $file data/$name");
+      $notification="<p style='color:blue'>Carga de '$name' exitosa</p>";
+    }
+  }
+
+  echo "<h2>Datos</h2>";
+  $out=shell_exec("ls -ld data/*.csv");
+  echo "<pre>$out</pre>";
+
+echo<<<SQL
+<form action="salomon.php" method="post" enctype="multipart/form-data">
+  Cargar datos:<input type="file" name="datafile"><br/>
+  <input type="submit" name="accion" value="Cargar">
+</form>
+$notification
+SQL;
+
 echo<<<SQL
 <h2>Comando SQL</h2>
 <form>

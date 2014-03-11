@@ -59,11 +59,11 @@ define('USE_USERNAME', false);
 define('LOGOUT_URL', 'http://www.udea.edu.co');
 
 // time out after NN minutes of inactivity. Set to 0 to not timeout
-define('TIMEOUT_MINUTES', 1);
+define('TIMEOUT_MINUTES',60);
 
 // This parameter is only useful when TIMEOUT_MINUTES is not zero
 // true - timeout time from last activity, false - timeout time from login
-define('TIMEOUT_CHECK_ACTIVITY', true);
+define('TIMEOUT_CHECK_ACTIVITY',false);
 
 ##################################################################
 #  SETTINGS END
