@@ -293,6 +293,7 @@ OUT;
       $parts=preg_split("/\./",$name);
       $ext=$parts[1];
       $file=$_FILES["datafile"]["tmp_name"];
+      echo $name,$ext,$file;
       if($ext!="zip"){
 	shell_exec("cp -rf $file data/$name");
       }else{
