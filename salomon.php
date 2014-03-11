@@ -290,8 +290,14 @@ OUT;
       echo "Error: " . $_FILES["file"]["error"] . "<br>";
     }else{
       $name=$_FILES["datafile"]["name"];
+      $parts=preg_split("/\./",$name);
+      $ext=$parts[1];
       $file=$_FILES["datafile"]["tmp_name"];
-      shell_exec("cp -rf $file data/$name");
+      if($ext!="zip"){
+	shell_exec("cp -rf $file data/$name");
+      }else{
+	shell_exec("unzip $file -d data");
+      }
       $notification="<p style='color:blue'>Carga de '$name' exitosa</p>";
     }
   }
