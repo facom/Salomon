@@ -9,6 +9,7 @@ verbose3=0
 verbose4=0
 verbose5=0
 continuar=False
+pause=True
 
 #AVAILABILITY
 
@@ -16,12 +17,14 @@ continuar=False
 conf=dict2obj(dict())
 conf.betaref=1.2
 conf.weight_cupo=10.0
+conf.ncupo=3.0
+conf.slope=0.8
 
 #BLOQUE SCORE
-conf.weight_bloque=10.0
+conf.weight_bloque=2.0
 
 #COINCIDENCE SCORE
-conf.weight_coincidence=10.0
+conf.weight_coincidence=8.0
 
 #SCORING 
 conf.weight_matching=10.0
@@ -33,8 +36,7 @@ salomon,connection=loadDatabase(server='localhost',
                      user='salomon',
                      password='123',
                      database='salomon_1401')
-print "Hola";
-exit(0)
+
 #############################################################
 #GET BLOCKS PER PROGRAM
 #############################################################
@@ -65,7 +67,14 @@ try:
 except:
     Nsol=10
 
-random.seed(1)
+try:
+    seed=int(argv[2])
+except:
+    seed=0
+
+if seed>0:
+    random.seed(seed)
+
 fsol=open("soluciones/salomon-soluciones.txt","w")
 for solution in xrange(1,Nsol+1):
     d="\t"
@@ -84,12 +93,20 @@ for solution in xrange(1,Nsol+1):
     scoresolution=0
     actividad_count=0
     horario_count=0
+    noroom=[]
     for actividadid in shuffleList(actividades):
         actividad_count+=1;
         actividad=salomon_test['Actividades']['rows'][actividadid]
         d="\t"*2
         nombre=actividad['nombre']
         codigo=actividad['codigo']
+        """
+        if codigo=='305191':
+            verbose1=1
+            verbose2=1
+            verbose3=1
+            verbose4=1
+            """
         if verbose2:print d,"Actividad %d: %s (%s)"%(actividad_count,nombre,codigo)
 
         #&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -200,11 +217,17 @@ for solution in xrange(1,Nsol+1):
                                 break
                             else:
                                 if verbose4:print d,"Horario no incompatible"
+
                 d="\t"*5
                 if unavailable:
-                    if verbose4:print d,"Espacio no disponible"
-                    continue
-                if verbose4:print d,"Espacio disponible"
+                    score0=-1500*1
+                    if verbose4:print d,"Espacio no disponible (%d)"%score0
+                    #continue
+                else:
+                    score0=0
+                if verbose4:
+                    print d,"Espacio disponible"
+                score+=score0
                 
                 #==================================================
                 #CRITERIUM 1: CAPACITY VS. CUPO
@@ -213,8 +236,8 @@ for solution in xrange(1,Nsol+1):
                 u=int(cupo)
                 a=int(capacidad)
                 
-                if a<u:score1=conf.weight_cupo*(1.0-(1.*u)/a)
-                else:score1=conf.weight_cupo*(conf.betaref-(1.*a)/u)
+                if a<u:score1=conf.weight_cupo*(1.0-((1.*u)/a)**conf.ncupo)
+                else:score1=conf.weight_cupo*(conf.betaref-conf.slope*(1.*a)/u)
                 if verbose4:print d,"Score Cupo (u=%d,a=%d):"%(u,a),score1
                 score+=score1
                 
@@ -276,7 +299,7 @@ for solution in xrange(1,Nsol+1):
 
                     if req=='0':continue                    
                     if verbose4:print d,"Resource %s: Required: %s, Resource: %s"%(reskey,req,res)
-                    if res=='1':
+                    if res=='1' or res=='3':
                         if verbose4:print d,"Match"
                         ncoin+=1
                     else:
@@ -316,7 +339,7 @@ for solution in xrange(1,Nsol+1):
 
                 if verbose4:
                     if not continuar:
-                        continuar=raw_input()
+                        if pause:continuar=raw_input()
                         try:
                             continuar=int(continuar)
                         except:
@@ -330,6 +353,7 @@ for solution in xrange(1,Nsol+1):
             #SOLUTION
             #****************************************
             d="\t"*4
+            if verbose4:print "Scores: ",scores
             ibest=np.array(scores).argsort()[::-1][0]
             roombest=roomsol[ibest]
             scorebest=scores[ibest]
@@ -343,8 +367,13 @@ for solution in xrange(1,Nsol+1):
             #STORE SOLUTION
             #****************************************
             horario['espacio_id']=roombest
-            espacio['horario_ids']+='%s;'%horarioid
+
+            espaciobest=salomon_test['Espacios']['rows'][roombest]
+            espacioid=espaciobest['espacio']
+            espaciobest['horario_ids']+='%s;'%horarioid
             scoresolution+=scorebest
+            if scorebest<-1000:
+                noroom+=[(actividadid,nombre,horarioid,espacioid,scorebest)]
 
             #****************************************
             #COMPUTE EFFICIENCY
@@ -373,7 +402,7 @@ for solution in xrange(1,Nsol+1):
                     try:req_int=int(req)
                     except:req_int=0
                     if req_int:
-                        if req==res:coincidencia[reskey]='Si'
+                        if res=='1' or res=='3':coincidencia[reskey]='Si'
                         else:coincidencia[reskey]='No'
                     else:
                         if res==req:coincidencia[reskey]='Vacio'
@@ -386,7 +415,7 @@ for solution in xrange(1,Nsol+1):
             """
 
             if continuar:
-                continuar=raw_input()
+                if pause:continuar=raw_input()
                 try:
                     continuar=int(continuar)
                 except:
@@ -407,6 +436,7 @@ for solution in xrange(1,Nsol+1):
     if verbose1:print d,"Global Efficiency: %.1f"%(globalefficiency)
     averageefficiency=(average_efficiency)/horario_count
     if verbose1:print d,"Average Efficiency: %.1f"%(averageefficiency)
+    if verbose1:print d,"No room: %d"%(len(noroom)),noroom
 
     """
     if not continuar and continuar!=3:

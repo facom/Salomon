@@ -32,14 +32,20 @@ if(false){
 echo<<<SOLUCIONES
 <form>
   <input type='hidden' name='Soluciones' value='1'>
-  Numero de soluciones: <input type='text' name='numero' value='10'>
+  Numero de soluciones: <input type='text' name='numero' value='10'><br/>
+  semilla: <input type='text' name='seed' value='0'> (0 para aleatoriedad)
   <input type='submit' name='haga' value='Haga'>
 </form>
 SOLUCIONES;
   }else{
     $numero=$_GET['numero'];
-    $out=shell_exec("python salomon-solucion.py $numero");
+    $semilla=$_GET['seed'];
+    //$out=shell_exec("python salomon-solucion.py $numero $semilla &> $ROOTDIR/soluciones/salomon-soluciones.log");
+    $out=shell_exec("python salomon-solucion.py $numero $semilla");
+    shell_exec("echo '$out' > soluciones/salomon-soluciones.log");
+    $out=shell_exec("cat soluciones/salomon-soluciones.log");
     echo "<pre>$out</pre>";
+    echo "<a href=?Soluciones>Corre otras soluciones</a>";
   }     	    
 }else if(isset($_GET["Cargar"])){
       if(false){
@@ -53,9 +59,14 @@ SOLUCIONES;
 	  $solstr.="<li><a href='?Cargar&carga=$parts[0]'>Solucion $parts[0]</a>: $parts[1]</li>";
 	}
 	$solstr.="</ul>";
+	$out=shell_exec("cat soluciones/salomon-soluciones.log");
 echo<<<SOLUCIONES
 Soluciones disponibles:
 $solstr
+<p>Reporte detallado</p>
+<pre>
+$out
+</pre>
 </form>
 SOLUCIONES;
       }else{

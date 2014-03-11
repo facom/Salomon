@@ -9,7 +9,7 @@ from os import system
 ###################################################
 #CONFIGURACION
 ###################################################
-CSVLOCATION="tmp/EspaciosFacultad/SalomonFinal/"
+CSVLOCATION="data/"
 BASENAME="Salomon"
 DATABASE="salomon_1401"
 USER="salomon"
