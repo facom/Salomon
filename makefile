@@ -13,6 +13,10 @@ commit:
 	git commit -am "Commit"
 	git push origin master
 
+pull:
+	git pull
+	chown -R www-data.www-data .
+
 create:
 	mysql --user='root' -p < table.sql
 
