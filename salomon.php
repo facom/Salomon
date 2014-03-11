@@ -296,7 +296,7 @@ OUT;
       if($ext!="zip"){
 	shell_exec("cp -rf $file data/$name");
       }else{
-	shell_exec("unzip $file -d data");
+	shell_exec("unzip $file -d data &> /tmp/err.log");
       }
       $notification="<p style='color:blue'>Carga de '$name' exitosa</p>";
     }
